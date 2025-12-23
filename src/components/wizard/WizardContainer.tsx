@@ -4,6 +4,7 @@ import { useFinanceStore } from '../../store/financeStore';
 import { ProgramStep } from './ProgramStep';
 import { LOCStep } from './LOCStep';
 import { ExpensesStep } from './ExpensesStep';
+import { IncomeStep } from './IncomeStep';
 
 interface WizardContainerProps {
   onComplete: () => void;
@@ -13,6 +14,7 @@ const WIZARD_STEPS = [
   'Program & Timeline',
   'Line of Credit',
   'Expenses',
+  'Income Sources',
 ];
 
 export function WizardContainer({ onComplete }: WizardContainerProps) {
@@ -40,6 +42,8 @@ export function WizardContainer({ onComplete }: WizardContainerProps) {
         return <LOCStep />;
       case 2:
         return <ExpensesStep />;
+      case 3:
+        return <IncomeStep />;
       default:
         return <div>Unknown step</div>;
     }
