@@ -15,8 +15,11 @@ export function FundingStep() {
     termsApplied: [] as number[],
   });
 
-  const totalTerms = profile?.semesterStructure.length || 8;
+  const totalTerms = profile?.semesterStructure?.length || 8;
   const terms = profile?.semesterStructure || [];
+
+  // Ensure fundingSources is always an array
+  const sources = fundingSources || [];
 
   const handleAddFunding = () => {
     if (!newFunding.name || newFunding.amount <= 0 || newFunding.termsApplied.length === 0) {
@@ -57,11 +60,11 @@ export function FundingStep() {
     }
   };
 
-  const totalGrants = fundingSources
+  const totalGrants = sources
     .filter((f) => f.type === 'grant')
     .reduce((sum, f) => sum + f.amount * f.termsApplied.length, 0);
 
-  const totalLoans = fundingSources
+  const totalLoans = sources
     .filter((f) => f.type === 'loan')
     .reduce((sum, f) => sum + f.amount * f.termsApplied.length, 0);
 
@@ -93,10 +96,10 @@ export function FundingStep() {
       </div>
 
       {/* Existing Funding Sources */}
-      {fundingSources.length > 0 && (
+      {sources.length > 0 && (
         <div className="space-y-3">
           <h3 className="font-semibold text-gray-900">Your Funding Sources</h3>
-          {fundingSources.map((funding) => (
+          {sources.map((funding) => (
             <div
               key={funding.id}
               className={`p-4 rounded-lg border-2 ${
