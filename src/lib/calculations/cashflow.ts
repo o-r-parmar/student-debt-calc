@@ -125,20 +125,7 @@ export function calculateMonthlyExpenses(
   total: number;
   breakdown: Record<ExpenseCategory, number>;
 } {
-  const breakdown: Record<ExpenseCategory, number> = {
-    tuition: 0,
-    housing: 0,
-    utilities: 0,
-    food: 0,
-    transportation: 0,
-    textbooks: 0,
-    technology: 0,
-    health: 0,
-    personal: 0,
-    entertainment: 0,
-    insurance: 0,
-    other: 0,
-  };
+  const breakdown: Partial<Record<ExpenseCategory, number>> = {};
 
   expenses.forEach((expense) => {
     // Check if expense applies to this month
@@ -181,12 +168,12 @@ export function calculateMonthlyExpenses(
         break;
     }
 
-    breakdown[expense.category] += monthlyAmount;
+    breakdown[expense.category] = (breakdown[expense.category] || 0) + monthlyAmount;
   });
 
-  const total = Object.values(breakdown).reduce((sum, val) => sum + val, 0);
+  const total = Object.values(breakdown).reduce((sum, val) => sum + (val || 0), 0);
 
-  return { total, breakdown };
+  return { total, breakdown: breakdown as Record<ExpenseCategory, number> };
 }
 
 /**

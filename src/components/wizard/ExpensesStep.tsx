@@ -29,10 +29,15 @@ export function ExpensesStep() {
         priority: ExpensePriority;
       }> = [
         { category: 'housing', name: 'Rent', amount: 1200, frequency: 'monthly', priority: 'essential' },
-        { category: 'food', name: 'Groceries & Dining', amount: 400, frequency: 'monthly', priority: 'essential' },
-        { category: 'transportation', name: 'Transit Pass', amount: 150, frequency: 'monthly', priority: 'important' },
         { category: 'utilities', name: 'Utilities', amount: 100, frequency: 'monthly', priority: 'essential' },
-        { category: 'entertainment', name: 'Entertainment', amount: 100, frequency: 'monthly', priority: 'discretionary' },
+        { category: 'groceries', name: 'Groceries', amount: 300, frequency: 'monthly', priority: 'essential' },
+        { category: 'dining', name: 'Dining Out', amount: 100, frequency: 'monthly', priority: 'discretionary' },
+        { category: 'phone', name: 'Cell Phone', amount: 60, frequency: 'monthly', priority: 'essential' },
+        { category: 'internet', name: 'Internet', amount: 50, frequency: 'monthly', priority: 'important' },
+        { category: 'transportation', name: 'Transit/Gas', amount: 150, frequency: 'monthly', priority: 'important' },
+        { category: 'laundry', name: 'Laundry', amount: 20, frequency: 'monthly', priority: 'essential' },
+        { category: 'personal', name: 'Personal Care', amount: 50, frequency: 'monthly', priority: 'important' },
+        { category: 'entertainment', name: 'Entertainment', amount: 80, frequency: 'monthly', priority: 'discretionary' },
       ];
 
       defaultExpenses.forEach((exp) => {
