@@ -6,7 +6,7 @@ import { useFinanceStore } from './store/financeStore';
 
 function App() {
   const [showWizard, setShowWizard] = useState(false);
-  const { profile, loc, reset } = useFinanceStore();
+  const { profile, loc, reset, setWizardStep } = useFinanceStore();
 
   const hasSetupData = profile !== null && loc !== null;
 
@@ -14,9 +14,15 @@ function App() {
     setShowWizard(false);
   };
 
+  const handleEditSetup = () => {
+    setWizardStep(0); // Reset to first step when editing
+    setShowWizard(!showWizard);
+  };
+
   const handleResetData = () => {
     if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
       reset();
+      setWizardStep(0);
       setShowWizard(true);
     }
   };
@@ -38,7 +44,7 @@ function App() {
             <div className="flex gap-3">
               {hasSetupData && (
                 <>
-                  <Button variant="outline" onClick={() => setShowWizard(!showWizard)}>
+                  <Button variant="outline" onClick={handleEditSetup}>
                     {showWizard ? 'View Dashboard' : 'Edit Setup'}
                   </Button>
                   <Button variant="secondary" onClick={handleResetData}>
