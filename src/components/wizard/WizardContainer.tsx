@@ -1,20 +1,24 @@
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { useFinanceStore } from '../../store/financeStore';
+import { AssetsStep } from './AssetsStep';
 import { ProgramStep } from './ProgramStep';
 import { LOCStep } from './LOCStep';
 import { ExpensesStep } from './ExpensesStep';
 import { IncomeStep } from './IncomeStep';
+import { FundingStep } from './FundingStep';
 
 interface WizardContainerProps {
   onComplete: () => void;
 }
 
 const WIZARD_STEPS = [
+  'Current Assets',
   'Program & Timeline',
   'Line of Credit',
   'Expenses',
   'Income Sources',
+  'Government Funding',
 ];
 
 export function WizardContainer({ onComplete }: WizardContainerProps) {
@@ -37,13 +41,17 @@ export function WizardContainer({ onComplete }: WizardContainerProps) {
   const renderStepContent = () => {
     switch (wizardStep) {
       case 0:
-        return <ProgramStep />;
+        return <AssetsStep onContinue={() => handleNext()} />;
       case 1:
-        return <LOCStep />;
+        return <ProgramStep />;
       case 2:
-        return <ExpensesStep />;
+        return <LOCStep />;
       case 3:
+        return <ExpensesStep />;
+      case 4:
         return <IncomeStep />;
+      case 5:
+        return <FundingStep />;
       default:
         return <div>Unknown step</div>;
     }

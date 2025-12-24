@@ -17,7 +17,13 @@ export function ProgramStep() {
   );
   const [semesters, setSemesters] = useState<Partial<SemesterInfo>[]>(
     profile?.semesterStructure || [
-      { name: 'Fall 2024', startMonth: 0, endMonth: 3, tuitionAmount: 8000, isCoop: false },
+      {
+        name: 'Fall 2024',
+        startMonth: 0,
+        endMonth: 3,
+        tuitionAmount: 8000,
+        isCoop: false
+      },
     ]
   );
 

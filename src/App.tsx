@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { WizardContainer } from './components/wizard/WizardContainer';
-import { Dashboard } from './components/dashboard/Dashboard';
+import { YearBasedDashboard } from './components/dashboard/YearBasedDashboard';
 import { Button } from './components/ui/Button';
 import { useFinanceStore } from './store/financeStore';
 
@@ -56,7 +56,7 @@ function App() {
         {!hasSetupData || showWizard ? (
           <WizardContainer onComplete={handleCompleteWizard} />
         ) : (
-          <Dashboard />
+          <YearBasedDashboard />
         )}
       </main>
 
