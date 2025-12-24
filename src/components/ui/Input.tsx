@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { Tooltip } from './Tooltip';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -7,6 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  tooltip?: string;
 }
 
 export function Input({
@@ -15,6 +17,7 @@ export function Input({
   helperText,
   leftIcon,
   rightIcon,
+  tooltip,
   className,
   id,
   ...props
@@ -28,7 +31,10 @@ export function Input({
           htmlFor={inputId}
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {label}
+          <span className="inline-flex items-center">
+            {label}
+            {tooltip && <Tooltip content={tooltip} />}
+          </span>
         </label>
       )}
       <div className="relative">

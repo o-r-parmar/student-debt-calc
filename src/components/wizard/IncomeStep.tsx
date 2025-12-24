@@ -81,6 +81,15 @@ export function IncomeStep() {
     }
   };
 
+  const handleDuplicate = (income: Income) => {
+    const duplicatedIncome = {
+      ...income,
+      id: `income-${Date.now()}`,
+      source: `${income.source} (Copy)`,
+    };
+    addIncome(duplicatedIncome);
+  };
+
   const calculateNetMonthly = (gross: number, taxRate?: number) => {
     if (!taxRate) return gross;
     return gross * (1 - taxRate / 100);
@@ -147,13 +156,22 @@ export function IncomeStep() {
                     )}
                   </div>
                 </div>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => removeIncome(income.id)}
-                >
-                  Remove
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDuplicate(income)}
+                  >
+                    Duplicate
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => removeIncome(income.id)}
+                  >
+                    Remove
+                  </Button>
+                </div>
               </div>
             );
           })}

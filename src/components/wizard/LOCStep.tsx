@@ -62,6 +62,7 @@ export function LOCStep() {
           value={creditLimit}
           onChange={(e) => setCreditLimit(Number(e.target.value))}
           helperText="Maximum amount you can borrow"
+          tooltip="The maximum amount your bank will let you borrow on your student line of credit. This is NOT how much you owe - it's your borrowing limit. Typical student LOC limits range from $10,000 to $80,000 depending on your program."
           leftIcon={<span className="text-gray-500">$</span>}
         />
         <Input
@@ -70,6 +71,7 @@ export function LOCStep() {
           value={currentBalance}
           onChange={(e) => setCurrentBalance(Number(e.target.value))}
           helperText="Amount currently owed"
+          tooltip="How much money you currently owe on your LOC. If you're just starting, this would be $0. If you've already borrowed money, enter the current amount you owe."
           leftIcon={<span className="text-gray-500">$</span>}
         />
       </div>
