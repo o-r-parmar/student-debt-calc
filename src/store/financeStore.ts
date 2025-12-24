@@ -42,6 +42,8 @@ interface FinanceStore extends FinanceState {
   reset: () => void;
 }
 
+const STORAGE_VERSION = 2; // Increment when making breaking changes
+
 const initialState: FinanceState = {
   profile: null,
   loc: null,
@@ -197,6 +199,15 @@ export const useFinanceStore = create<FinanceStore>()(
     }),
     {
       name: 'finance-storage',
+      version: STORAGE_VERSION,
+      migrate: (persistedState: any, version: number) => {
+        // If the version doesn't match, reset to initial state
+        if (version !== STORAGE_VERSION) {
+          console.log('Storage version mismatch. Resetting to initial state.');
+          return initialState;
+        }
+        return persistedState as FinanceState;
+      },
     }
   )
 );
