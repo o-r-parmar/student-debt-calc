@@ -14,6 +14,8 @@ export function YearBasedDashboard() {
     scholarships,
     incomes,
     expenses,
+    currentAssets,
+    fundingSources,
     optimizationConfig,
     currentResult,
     setCurrentResult,
@@ -171,6 +173,120 @@ export function YearBasedDashboard() {
             </div>
             <div className="text-3xl font-bold text-green-600">
               {formatCurrency(currentResult.interestSavingsVsMinimum)}
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Current Assets Summary */}
+      {currentAssets && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Current Assets</CardTitle>
+          </CardHeader>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div>
+              <p className="text-sm text-gray-600">Checking</p>
+              <p className="text-lg font-semibold">{formatCurrency(currentAssets.checking)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Savings</p>
+              <p className="text-lg font-semibold">{formatCurrency(currentAssets.savings)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">TFSA</p>
+              <p className="text-lg font-semibold">{formatCurrency(currentAssets.tfsa)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">RRSP</p>
+              <p className="text-lg font-semibold">{formatCurrency(currentAssets.rrsp)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Other</p>
+              <p className="text-lg font-semibold">{formatCurrency(currentAssets.other)}</p>
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-gray-700">Total Assets</span>
+              <span className="text-xl font-bold text-green-600">
+                {formatCurrency(
+                  currentAssets.checking +
+                    currentAssets.savings +
+                    currentAssets.tfsa +
+                    currentAssets.rrsp +
+                    currentAssets.other
+                )}
+              </span>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Government Funding Summary */}
+      {fundingSources && fundingSources.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Government Funding Sources</CardTitle>
+          </CardHeader>
+          <div className="space-y-3">
+            {fundingSources.map((funding) => (
+              <div
+                key={funding.id}
+                className={`p-3 rounded-lg ${
+                  funding.type === 'grant'
+                    ? 'bg-green-50 border border-green-200'
+                    : 'bg-orange-50 border border-orange-200'
+                }`}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">{funding.name}</span>
+                      <span
+                        className={`text-xs px-2 py-1 rounded font-medium ${
+                          funding.type === 'grant'
+                            ? 'bg-green-600 text-white'
+                            : 'bg-orange-600 text-white'
+                        }`}
+                      >
+                        {funding.type === 'grant' ? 'GRANT' : 'LOAN'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {formatCurrency(funding.amount)} per term × {funding.termsApplied.length} terms
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold">
+                      {formatCurrency(funding.amount * funding.termsApplied.length)}
+                    </p>
+                    <p className="text-xs text-gray-500">Total</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="pt-3 border-t flex justify-between items-center">
+              <div>
+                <span className="text-sm font-medium text-gray-700">Total Grants: </span>
+                <span className="text-lg font-bold text-green-600">
+                  {formatCurrency(
+                    fundingSources
+                      .filter((f) => f.type === 'grant')
+                      .reduce((sum, f) => sum + f.amount * f.termsApplied.length, 0)
+                  )}
+                </span>
+              </div>
+              <div>
+                <span className="text-sm font-medium text-gray-700">Total Loans: </span>
+                <span className="text-lg font-bold text-orange-600">
+                  {formatCurrency(
+                    fundingSources
+                      .filter((f) => f.type === 'loan')
+                      .reduce((sum, f) => sum + f.amount * f.termsApplied.length, 0)
+                  )}
+                </span>
+              </div>
             </div>
           </div>
         </Card>
