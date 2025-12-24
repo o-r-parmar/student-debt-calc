@@ -103,6 +103,22 @@ export interface UserProfile {
   semesterStructure: SemesterInfo[];
 }
 
+export interface CurrentAssets {
+  checking: number;
+  savings: number;
+  tfsa: number;
+  rrsp: number;
+  other: number;
+}
+
+export interface FundingSource {
+  id: string;
+  name: string;
+  type: 'grant' | 'loan';
+  amount: number;
+  termsApplied: number[];
+}
+
 // ============ OUTPUT/CALCULATION MODELS ============
 
 export interface MonthlySnapshot {
@@ -203,6 +219,8 @@ export interface FinanceState {
   scholarships: Scholarship[];
   incomes: Income[];
   expenses: Expense[];
+  currentAssets: CurrentAssets | null;
+  fundingSources: FundingSource[];
 
   // Calculation results
   optimizationConfig: OptimizationConfig;

@@ -3,18 +3,10 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { useFinanceStore } from '../../store/financeStore';
-
-interface FundingSource {
-  id: string;
-  name: string;
-  type: 'grant' | 'loan';
-  amount: number;
-  termsApplied: number[]; // Array of term indices where this applies
-}
+import type { FundingSource } from '../../types';
 
 export function FundingStep() {
-  const { profile } = useFinanceStore();
-  const [fundingSources, setFundingSources] = useState<FundingSource[]>([]);
+  const { profile, fundingSources, addFundingSource, removeFundingSource } = useFinanceStore();
 
   const [newFunding, setNewFunding] = useState({
     name: '',
@@ -37,7 +29,7 @@ export function FundingStep() {
       ...newFunding,
     };
 
-    setFundingSources([...fundingSources, funding]);
+    addFundingSource(funding);
     setNewFunding({
       name: '',
       type: 'grant',
@@ -47,7 +39,7 @@ export function FundingStep() {
   };
 
   const handleRemoveFunding = (id: string) => {
-    setFundingSources(fundingSources.filter((f) => f.id !== id));
+    removeFundingSource(id);
   };
 
   const handleTermToggle = (termIndex: number) => {

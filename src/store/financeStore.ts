@@ -10,6 +10,8 @@ import type {
   Expense,
   OptimizationConfig,
   OptimizationResult,
+  CurrentAssets,
+  FundingSource,
 } from '../types';
 
 interface FinanceStore extends FinanceState {
@@ -28,6 +30,9 @@ interface FinanceStore extends FinanceState {
   addExpense: (expense: Expense) => void;
   removeExpense: (expenseId: string) => void;
   updateExpense: (expenseId: string, expense: Expense) => void;
+  setCurrentAssets: (assets: CurrentAssets) => void;
+  addFundingSource: (source: FundingSource) => void;
+  removeFundingSource: (sourceId: string) => void;
   setOptimizationConfig: (config: OptimizationConfig) => void;
   setCurrentResult: (result: OptimizationResult) => void;
   setWizardStep: (step: number) => void;
@@ -44,6 +49,8 @@ const initialState: FinanceState = {
   scholarships: [],
   incomes: [],
   expenses: [],
+  currentAssets: null,
+  fundingSources: [],
   optimizationConfig: {
     strategy: 'balanced',
     emergencyBufferMonths: 2,
@@ -138,6 +145,21 @@ export const useFinanceStore = create<FinanceStore>()(
       updateExpense: (expenseId, expense) =>
         set((state) => ({
           expenses: state.expenses.map((e) => (e.id === expenseId ? expense : e)),
+          lastSaved: new Date(),
+        })),
+
+      setCurrentAssets: (assets) =>
+        set({ currentAssets: assets, lastSaved: new Date() }),
+
+      addFundingSource: (source) =>
+        set((state) => ({
+          fundingSources: [...state.fundingSources, source],
+          lastSaved: new Date(),
+        })),
+
+      removeFundingSource: (sourceId) =>
+        set((state) => ({
+          fundingSources: state.fundingSources.filter((f) => f.id !== sourceId),
           lastSaved: new Date(),
         })),
 

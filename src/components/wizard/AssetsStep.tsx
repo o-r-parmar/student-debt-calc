@@ -1,23 +1,18 @@
 import { useState } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
-
-interface CurrentAssets {
-  checking: number;
-  savings: number;
-  tfsa: number;
-  rrsp: number;
-  other: number;
-}
+import { useFinanceStore } from '../../store/financeStore';
+import type { CurrentAssets } from '../../types';
 
 interface AssetsStepProps {
-  onContinue: (assets: CurrentAssets) => void;
-  initialAssets?: CurrentAssets;
+  onContinue: () => void;
 }
 
-export function AssetsStep({ onContinue, initialAssets }: AssetsStepProps) {
+export function AssetsStep({ onContinue }: AssetsStepProps) {
+  const { currentAssets, setCurrentAssets } = useFinanceStore();
+
   const [assets, setAssets] = useState<CurrentAssets>(
-    initialAssets || {
+    currentAssets || {
       checking: 0,
       savings: 0,
       tfsa: 0,
@@ -30,7 +25,8 @@ export function AssetsStep({ onContinue, initialAssets }: AssetsStepProps) {
     assets.checking + assets.savings + assets.tfsa + assets.rrsp + assets.other;
 
   const handleContinue = () => {
-    onContinue(assets);
+    setCurrentAssets(assets);
+    onContinue();
   };
 
   return (
