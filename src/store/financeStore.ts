@@ -248,10 +248,19 @@ export const useFinanceStore = create<FinanceStore>()(
       name: 'finance-storage',
       version: STORAGE_VERSION,
       migrate: (persistedState: any, version: number) => {
-        // If the version doesn't match, reset to initial state
-        if (version !== STORAGE_VERSION) {
-          console.log('Storage version mismatch. Resetting to initial state.');
-          return initialState;
+        // Instead of resetting, merge old data with new structure
+        if (version < STORAGE_VERSION) {
+          console.log(`Migrating from version ${version} to ${STORAGE_VERSION}`);
+
+          // Merge persisted state with initial state, keeping old data
+          return {
+            ...initialState,
+            ...persistedState,
+            // Ensure new fields exist with defaults if missing
+            currentAssets: persistedState.currentAssets || initialState.currentAssets,
+            fundingSources: persistedState.fundingSources || initialState.fundingSources,
+            universityProfiles: persistedState.universityProfiles || initialState.universityProfiles,
+          };
         }
         return persistedState as FinanceState;
       },
