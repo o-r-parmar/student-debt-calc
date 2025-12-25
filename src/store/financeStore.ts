@@ -12,6 +12,7 @@ import type {
   OptimizationResult,
   CurrentAssets,
   FundingSource,
+  UniversityProfile,
 } from '../types';
 
 interface FinanceStore extends FinanceState {
@@ -33,6 +34,9 @@ interface FinanceStore extends FinanceState {
   setCurrentAssets: (assets: CurrentAssets) => void;
   addFundingSource: (source: FundingSource) => void;
   removeFundingSource: (sourceId: string) => void;
+  saveUniversityProfile: (name: string) => void;
+  loadUniversityProfile: (profileId: string) => void;
+  deleteUniversityProfile: (profileId: string) => void;
   setOptimizationConfig: (config: OptimizationConfig) => void;
   setCurrentResult: (result: OptimizationResult) => void;
   setWizardStep: (step: number) => void;
@@ -42,7 +46,7 @@ interface FinanceStore extends FinanceState {
   reset: () => void;
 }
 
-const STORAGE_VERSION = 2; // Increment when making breaking changes
+const STORAGE_VERSION = 3; // Increment when making breaking changes
 
 const initialState: FinanceState = {
   profile: null,
@@ -53,6 +57,7 @@ const initialState: FinanceState = {
   expenses: [],
   currentAssets: null,
   fundingSources: [],
+  universityProfiles: [],
   optimizationConfig: {
     strategy: 'balanced',
     emergencyBufferMonths: 2,
@@ -162,6 +167,48 @@ export const useFinanceStore = create<FinanceStore>()(
       removeFundingSource: (sourceId) =>
         set((state) => ({
           fundingSources: state.fundingSources.filter((f) => f.id !== sourceId),
+          lastSaved: new Date(),
+        })),
+
+      saveUniversityProfile: (name) =>
+        set((state) => {
+          if (!state.profile) return state;
+
+          const newProfile: UniversityProfile = {
+            id: `uni-${Date.now()}`,
+            name,
+            programLength: state.profile.programLength,
+            semesterStructure: state.profile.semesterStructure,
+            createdAt: new Date(),
+          };
+
+          return {
+            universityProfiles: [...state.universityProfiles, newProfile],
+            lastSaved: new Date(),
+          };
+        }),
+
+      loadUniversityProfile: (profileId) =>
+        set((state) => {
+          const savedProfile = state.universityProfiles.find((p) => p.id === profileId);
+          if (!savedProfile) return state;
+
+          const newUserProfile: UserProfile = {
+            programLength: savedProfile.programLength,
+            currentMonth: 0,
+            expectedGraduationDate: new Date(),
+            semesterStructure: savedProfile.semesterStructure,
+          };
+
+          return {
+            profile: newUserProfile,
+            lastSaved: new Date(),
+          };
+        }),
+
+      deleteUniversityProfile: (profileId) =>
+        set((state) => ({
+          universityProfiles: state.universityProfiles.filter((p) => p.id !== profileId),
           lastSaved: new Date(),
         })),
 

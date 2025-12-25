@@ -103,6 +103,14 @@ export interface UserProfile {
   semesterStructure: SemesterInfo[];
 }
 
+export interface UniversityProfile {
+  id: string;
+  name: string;
+  programLength: number;
+  semesterStructure: SemesterInfo[];
+  createdAt: Date;
+}
+
 export interface CurrentAssets {
   checking: number;
   savings: number;
@@ -221,6 +229,7 @@ export interface FinanceState {
   expenses: Expense[];
   currentAssets: CurrentAssets | null;
   fundingSources: FundingSource[];
+  universityProfiles: UniversityProfile[];
 
   // Calculation results
   optimizationConfig: OptimizationConfig;

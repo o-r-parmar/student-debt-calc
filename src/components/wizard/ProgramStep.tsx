@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
+import { Select } from '../ui/Select';
 import { useFinanceStore } from '../../store/financeStore';
 import type { SemesterInfo } from '../../types';
 
 export function ProgramStep() {
-  const { profile, setProfile } = useFinanceStore();
+  const {
+    profile,
+    setProfile,
+    universityProfiles,
+    saveUniversityProfile,
+    loadUniversityProfile,
+    deleteUniversityProfile
+  } = useFinanceStore();
+
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [profileName, setProfileName] = useState('');
 
   const [programLengthYears, setProgramLengthYears] = useState(
     profile?.programLength ? Math.floor(profile.programLength / 12) : 4
@@ -65,6 +76,27 @@ export function ProgramStep() {
     });
   };
 
+  const handleSaveProfile = () => {
+    if (!profileName.trim()) {
+      alert('Please enter a profile name');
+      return;
+    }
+    handleSave(); // Save current data first
+    saveUniversityProfile(profileName);
+    setProfileName('');
+    setShowSaveDialog(false);
+  };
+
+  const handleLoadProfile = (profileId: string) => {
+    if (!profileId) return;
+    loadUniversityProfile(profileId);
+    const loaded = universityProfiles.find(p => p.id === profileId);
+    if (loaded) {
+      setProgramLengthYears(Math.floor(loaded.programLength / 12));
+      setSemesters(loaded.semesterStructure);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -74,6 +106,96 @@ export function ProgramStep() {
         <p className="text-gray-600">
           Tell us about your academic program and timeline
         </p>
+      </div>
+
+      {/* University Profile Management */}
+      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+        <h3 className="text-sm font-semibold text-purple-900 mb-3">🎓 University Profiles</h3>
+
+        {/* Load Profile */}
+        {universityProfiles.length > 0 && (
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Load Saved Profile
+            </label>
+            <div className="flex gap-2">
+              <Select
+                value=""
+                onChange={(e) => handleLoadProfile(e.target.value)}
+                options={[
+                  { value: '', label: 'Select a university profile...' },
+                  ...universityProfiles.map(p => ({
+                    value: p.id,
+                    label: `${p.name} (${Math.floor(p.programLength / 12)} years, ${p.semesterStructure.length} terms)`
+                  }))
+                ]}
+                className="flex-1"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Save Current as Profile */}
+        {!showSaveDialog && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowSaveDialog(true)}
+            fullWidth
+          >
+            💾 Save Current Setup as Profile
+          </Button>
+        )}
+
+        {showSaveDialog && (
+          <div className="space-y-2">
+            <Input
+              label="Profile Name"
+              placeholder="e.g., Waterloo Engineering, UofT CS"
+              value={profileName}
+              onChange={(e) => setProfileName(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button onClick={handleSaveProfile} fullWidth>
+                Save Profile
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowSaveDialog(false);
+                  setProfileName('');
+                }}
+                fullWidth
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Saved Profiles List */}
+        {universityProfiles.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-purple-200">
+            <div className="text-xs text-purple-700 font-medium mb-2">Saved Profiles ({universityProfiles.length})</div>
+            <div className="space-y-1 max-h-32 overflow-y-auto">
+              {universityProfiles.map(p => (
+                <div key={p.id} className="flex justify-between items-center text-xs bg-white rounded px-2 py-1">
+                  <span className="text-gray-700">{p.name}</span>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Delete "${p.name}" profile?`)) {
+                        deleteUniversityProfile(p.id);
+                      }
+                    }}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
