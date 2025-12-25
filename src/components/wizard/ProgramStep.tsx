@@ -55,6 +55,15 @@ export function ProgramStep() {
     setSemesters(semesters.filter((_, i) => i !== index));
   };
 
+  const handleDuplicateSemester = (index: number) => {
+    const semesterToDuplicate = semesters[index];
+    const duplicatedSemester = {
+      ...semesterToDuplicate,
+      name: `${semesterToDuplicate.name || `Semester ${index + 1}`} (Copy)`,
+    };
+    setSemesters([...semesters, duplicatedSemester]);
+  };
+
   const handleSave = () => {
     const programLength = programLengthYears * 12;
     const expectedGraduationDate = graduationDate
@@ -262,16 +271,24 @@ export function ProgramStep() {
                     />
                     <span className="text-sm">Co-op Term</span>
                   </label>
-                  {semesters.length > 1 && (
+                  <div className="flex gap-2 ml-auto">
                     <Button
-                      variant="danger"
+                      variant="outline"
                       size="sm"
-                      onClick={() => handleRemoveSemester(index)}
-                      className="ml-auto"
+                      onClick={() => handleDuplicateSemester(index)}
                     >
-                      Remove
+                      Duplicate
                     </Button>
-                  )}
+                    {semesters.length > 1 && (
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleRemoveSemester(index)}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
